@@ -1,0 +1,94 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with tiered trust status and verification states",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "admin", "operator"] },
+        "emailVerified": { "type": "boolean" },
+        "phoneVerified": { "type": "boolean" },
+        "phoneNumber": { "type": "string" },
+        "identityVerified": { "type": "boolean" },
+        "identityProvider": { "type": "string" },
+        "biometricVerified": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "email", "role"]
+    },
+    "MediaAsset": {
+      "title": "MediaAsset",
+      "description": "Submitted media metadata, cryptographic byte hashes, and retention parameters",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "mediaType": { "type": "string", "enum": ["image", "video", "audio", "sticker"] },
+        "storageKey": { "type": "string" },
+        "originalFilename": { "type": "string" },
+        "mimeType": { "type": "string" },
+        "fileSize": { "type": "number" },
+        "sha256": { "type": "string" },
+        "perceptualHash": { "type": "string" },
+        "retentionUntil": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "deletedAt": { "type": "string" },
+        "isSampleData": { "type": "boolean" },
+        "sampleLabel": { "type": "string" }
+      },
+      "required": ["id", "ownerId", "mediaType", "sha256", "createdAt"]
+    },
+    "VerificationReport": {
+      "title": "VerificationReport",
+      "description": "Evidence-based verification dossier containing C2PA provenance and forensic AI findings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "mediaId": { "type": "string" },
+        "jobId": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "reportVersion": { "type": "string" },
+        "overallStatus": { "type": "string" },
+        "assessmentSummary": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "isDemoData": { "type": "boolean" }
+      },
+      "required": ["id", "mediaId", "ownerId", "overallStatus", "generatedAt"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Forensic assistant chat history message",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "model", "system"] },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "userId": { "type": "string" }
+      },
+      "required": ["id", "role", "content", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "#/entities/UserProfile",
+      "description": "User profiles indexed by UID"
+    },
+    "/media_assets/{mediaId}": {
+      "schema": "#/entities/MediaAsset",
+      "description": "Media asset records"
+    },
+    "/reports/{reportId}": {
+      "schema": "#/entities/VerificationReport",
+      "description": "Evidence verification reports"
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": "#/entities/ChatMessage",
+      "description": "Forensic investigation chatbot conversation threads"
+    }
+  }
+}

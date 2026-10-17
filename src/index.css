@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  
+  body {
+    background-color: #050a14;
+    color: #e2e8f0;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+}
+
+/* Digital Grid & Circuit Aesthetics */
+.cyber-grid {
+  background-image: 
+    linear-gradient(to right, rgba(6, 182, 212, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.cyber-grid-dense {
+  background-image: 
+    linear-gradient(to right, rgba(6, 182, 212, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(6, 182, 212, 0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+.cyber-dots {
+  background-image: radial-gradient(rgba(6, 182, 212, 0.12) 1px, transparent 0);
+  background-size: 20px 20px;
+}
+
+/* Glowing Circuit & Border Accents */
+.circuit-border {
+  position: relative;
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  box-shadow: 0 0 15px -3px rgba(6, 182, 212, 0.12), inset 0 0 15px -3px rgba(6, 182, 212, 0.05);
+}
+
+.circuit-border:hover {
+  border-color: rgba(6, 182, 212, 0.45);
+  box-shadow: 0 0 20px -2px rgba(6, 182, 212, 0.2), inset 0 0 20px -2px rgba(6, 182, 212, 0.08);
+}
+
+/* Technical HUD Panel with Corner Brackets */
+.tech-panel {
+  position: relative;
+  background: rgba(8, 18, 37, 0.85);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+.tech-panel::before,
+.tech-panel::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+}
+
+.tech-panel::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid #06b6d4;
+  border-left: 2px solid #06b6d4;
+}
+
+.tech-panel::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid #06b6d4;
+  border-right: 2px solid #06b6d4;
+}
+
+/* Scan Animations */
+@keyframes cyber-scan {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+.animate-cyber-scan {
+  position: relative;
+  overflow: hidden;
+}
+
+.animate-cyber-scan::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #22d3ee, #06b6d4, transparent);
+  box-shadow: 0 0 12px 2px rgba(6, 182, 212, 0.8);
+  animation: cyber-scan 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes radar-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-radar {
+  animation: radar-rotate 4s linear infinite;
+}
+
+@keyframes circuit-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-circuit-pulse {
+  animation: circuit-pulse 2.5s ease-in-out infinite;
+}

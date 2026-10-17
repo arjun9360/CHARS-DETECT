@@ -1,0 +1,8 @@
+{
+  "name": "AI Media Verification & Provenance Checker",
+  "description": "Enterprise-grade digital trust and forensic media verification platform for authenticating user identity, inspecting C2PA provenance credentials, analyzing synthetic media artifacts, and generating evidence-based reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

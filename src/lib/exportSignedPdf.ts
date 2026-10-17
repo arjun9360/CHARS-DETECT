@@ -48,12 +48,12 @@ export function generateSignedForensicPdf(
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(13);
       doc.setTextColor(255, 255, 255);
-      doc.text('VERISIGHT DIGITAL FORENSIC INTELLIGENCE', margin + 6, 16);
+      doc.text('CHARS DETECT DIGITAL FORENSIC INTELLIGENCE', margin + 6, 16);
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8);
       doc.setTextColor(6, 182, 212); // Cyan
-      doc.text('MEDIA VERIFICATION DOSSIER // TAMPER-EVIDENT FORENSIC SPECIFICATION (ISO/IEC 27037)', margin + 6, 21);
+      doc.text('CHARS DETECT FORENSIC DOSSIER // TAMPER-EVIDENT SPECIFICATION (ISO/IEC 27037)', margin + 6, 21);
 
       doc.setFont('courier', 'normal');
       doc.setFontSize(7);
@@ -73,12 +73,12 @@ export function generateSignedForensicPdf(
       doc.text('CRYPTOGRAPHICALLY SEALED', pageWidth - margin - 50, 16);
       doc.setFontSize(5.5);
       doc.setTextColor(203, 213, 225);
-      doc.text('FKI-NODE-902 SIGNED', pageWidth - margin - 50, 20);
+      doc.text('CD-NODE-902 SIGNED', pageWidth - margin - 50, 20);
     } else {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
       doc.setTextColor(255, 255, 255);
-      doc.text(`VERISIGHT FORENSIC DOSSIER  •  ID: ${report.id}`, margin + 5, 17);
+      doc.text(`CHARS DETECT FORENSIC DOSSIER  •  ID: ${report.id}`, margin + 5, 17);
 
       doc.setFont('courier', 'normal');
       doc.setFontSize(6.5);
@@ -343,7 +343,7 @@ export function generateSignedForensicPdf(
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.5);
   doc.setTextColor(6, 182, 212);
-  doc.text('FIPS-186-4 HMAC-SHA256 DIGITAL ATTESTATION // VERISIGHT TRUST NETWORK', margin + 5, y + 12);
+  doc.text('FIPS-186-4 HMAC-SHA256 DIGITAL ATTESTATION // CHARS DETECT TRUST NETWORK', margin + 5, y + 12);
 
   // Manifest info in monospace
   doc.setFont('courier', 'normal');
@@ -361,12 +361,12 @@ export function generateSignedForensicPdf(
   doc.setFont('courier', 'bold');
   doc.setFontSize(5.5);
   doc.setTextColor(56, 189, 248);
-  doc.text('-----BEGIN VERISIGHT FORENSIC SIGNATURE BLOCK-----', margin + 8, y + 37);
+  doc.text('-----BEGIN CHARS DETECT FORENSIC SIGNATURE BLOCK-----', margin + 8, y + 37);
   doc.setFont('courier', 'normal');
   doc.setTextColor(148, 163, 184);
   doc.text(`SIGNATURE: ${signatureHex}`, margin + 8, y + 41);
   doc.setTextColor(56, 189, 248);
-  doc.text('-----END VERISIGHT FORENSIC SIGNATURE BLOCK-----', margin + 8, y + 44);
+  doc.text('-----END CHARS DETECT FORENSIC SIGNATURE BLOCK-----', margin + 8, y + 44);
 
   y += 56;
 
@@ -383,7 +383,7 @@ export function generateSignedForensicPdf(
     doc.setFont('courier', 'normal');
     doc.setFontSize(6);
     doc.setTextColor(148, 163, 184);
-    doc.text(`VERISIGHT FORENSIC INTELLIGENCE // DOSSIER ID: ${report.id}`, margin, pageHeight - 7);
+    doc.text(`CHARS DETECT FORENSIC INTELLIGENCE // DOSSIER ID: ${report.id}`, margin, pageHeight - 7);
     doc.text(
       `PAGE ${p} OF ${totalPages} • SECURE TAMPER-EVIDENT SPECIFICATION`,
       pageWidth - margin - 65,
@@ -393,14 +393,14 @@ export function generateSignedForensicPdf(
 
   // Set Document Metadata
   doc.setProperties({
-    title: `Forensic Verification Dossier - ${report.id}`,
-    subject: `Forensic Analysis of ${report.mediaAsset.originalFilename}`,
-    author: 'VeriSight Certified Forensic Examination Engine',
-    keywords: 'forensic, verification, c2pa, sha256, digital-signature, tamper-evident',
-    creator: 'VeriSight Forensic Platform'
+    title: `CHARS DETECT Forensic Dossier - ${report.id}`,
+    subject: `CHARS DETECT Forensic Analysis of ${report.mediaAsset.originalFilename}`,
+    author: 'CHARS DETECT Certified Forensic Examination Engine',
+    keywords: 'chars-detect, forensic, verification, c2pa, sha256, digital-signature, tamper-evident',
+    creator: 'CHARS DETECT Forensic Platform'
   });
 
-  const filename = `Forensic_Dossier_${report.id}_SIGNED.pdf`;
+  const filename = `CHARS_DETECT_Forensic_Dossier_${report.id}_SIGNED.pdf`;
 
   if (options.autoDownload !== false && typeof window !== 'undefined') {
     doc.save(filename);

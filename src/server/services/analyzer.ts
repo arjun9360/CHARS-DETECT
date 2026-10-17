@@ -41,12 +41,13 @@ export class MediaAnalysisPipeline {
     const asset = db.mediaAssets.get(job.mediaId);
     if (!asset) throw new Error(`Media asset ${job.mediaId} not found`);
 
+    const isGuest = job.ownerId === 'guest_session' || job.ownerId.startsWith('guest_') || !db.users.has(job.ownerId);
     const user = db.users.get(job.ownerId) || {
       id: job.ownerId,
-      email: 'user@example.com',
-      displayName: 'Authenticated User',
+      email: isGuest ? '' : 'user@example.com',
+      displayName: isGuest ? 'Guest User' : 'Authenticated User',
       role: 'user' as const,
-      emailVerified: true,
+      emailVerified: false,
       phoneVerified: false,
       identityVerified: false,
       biometricVerified: false,
@@ -295,7 +296,7 @@ export class MediaAnalysisPipeline {
         generatedAt: new Date().toISOString(),
         mediaAsset: asset,
         userVerification: {
-          accountAuthenticated: true,
+          accountAuthenticated: !isGuest,
           emailVerified: user.emailVerified,
           phoneVerified: user.phoneVerified,
           identityVerified: user.identityVerified,

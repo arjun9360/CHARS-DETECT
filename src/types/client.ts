@@ -38,5 +38,8 @@ export type ActiveTab =
  */
 export function cleanDisplayName(name?: string | null): string {
   if (!name) return '';
-  return name.replace(/\s*\([^)]*\)/g, '').trim();
+  let cleaned = name.replace(/\s*\([^)]*\)/g, '');
+  cleaned = cleaned.replace(/\s*[-–—|/]\s*(Senior|Principal|Lead|Chief|Director|Officer|Specialist|Analyst|Engineer|Manager|Forensic|Admin|User|Auditor|Investigator).*$/i, '');
+  cleaned = cleaned.replace(/,\s*(Senior|Principal|Lead|Chief|Director|Officer|Specialist|Analyst|Engineer|Manager|Forensic|Admin|User|Auditor|Investigator).*$/i, '');
+  return cleaned.trim();
 }

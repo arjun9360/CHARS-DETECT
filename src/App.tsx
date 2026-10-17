@@ -38,6 +38,7 @@ export function App() {
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisProgress, setAnalysisProgress] = useState({ step: 'Initializing analysis workers...', percent: 5 });
+  const [systemNotice, setSystemNotice] = useState<{ type: 'error' | 'success' | 'info'; message: string } | null>(null);
 
   // Handle Google Auth
   const handleGoogleSignIn = async () => {
@@ -104,6 +105,8 @@ export function App() {
       } else {
         setUser(null);
       }
+      // Re-fetch reports, media, and audit trail for user session
+      refreshData();
     });
 
     return () => unsubscribe();
@@ -120,9 +123,9 @@ export function App() {
       const [resUser, resStatus, resMedia, resReports, resAudit] = await Promise.all([
         fetch('/api/v1/me', { headers }).then(r => r.ok ? r.json() : null),
         fetch('/api/v1/me/verification-status', { headers }).then(r => r.ok ? r.json() : null),
-        fetch('/api/v1/media').then(r => r.ok ? r.json() : null),
-        fetch('/api/v1/reports').then(r => r.ok ? r.json() : null),
-        fetch('/api/v1/audit-events').then(r => r.ok ? r.json() : null)
+        fetch('/api/v1/media', { headers }).then(r => r.ok ? r.json() : null),
+        fetch('/api/v1/reports', { headers }).then(r => r.ok ? r.json() : null),
+        fetch('/api/v1/audit-events', { headers }).then(r => r.ok ? r.json() : null)
       ]);
 
       if (auth.currentUser && resUser?.user) {
@@ -227,7 +230,8 @@ export function App() {
             } else if (job.status === 'failed') {
               clearInterval(pollInterval);
               setIsAnalyzing(false);
-              alert('Analysis failed: ' + (job.errorMessage || 'Unknown error'));
+              setSystemNotice({ type: 'error', message: 'Analysis failed: ' + (job.errorMessage || 'Unknown error') });
+              setTimeout(() => setSystemNotice(null), 7000);
             }
           }
         } catch (pollErr) {
@@ -236,7 +240,8 @@ export function App() {
       }, 500);
     } catch (err: any) {
       setIsAnalyzing(false);
-      alert(err.message || 'Media ingestion failed');
+      setSystemNotice({ type: 'error', message: err.message || 'Media ingestion failed' });
+      setTimeout(() => setSystemNotice(null), 7000);
     }
   };
 
@@ -285,12 +290,27 @@ export function App() {
               setIsAnalyzing(false);
               await refreshData();
               if (data.reportId) setSelectedReportId(data.reportId);
+            } else if (data.job?.status === 'failed') {
+              clearInterval(pollInterval);
+              setIsAnalyzing(false);
+              setSystemNotice({ type: 'error', message: 'Re-run analysis failed: ' + (data.job?.errorMessage || 'Engine error') });
+              setTimeout(() => setSystemNotice(null), 6000);
             }
+          } else {
+            clearInterval(pollInterval);
+            setIsAnalyzing(false);
           }
         }, 500);
+      } else {
+        setIsAnalyzing(false);
+        const errJson = await res.json().catch(() => ({}));
+        setSystemNotice({ type: 'error', message: errJson.error || 'Failed to start re-run analysis' });
+        setTimeout(() => setSystemNotice(null), 6000);
       }
-    } catch (err) {
+    } catch (err: any) {
       setIsAnalyzing(false);
+      setSystemNotice({ type: 'error', message: err.message || 'Rerun error' });
+      setTimeout(() => setSystemNotice(null), 6000);
       console.error('Rerun error:', err);
     }
   };
@@ -363,7 +383,25 @@ export function App() {
         onSignOut={handleSignOut}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-4">
+        {systemNotice && (
+          <div
+            className={`p-4 rounded-xl border text-xs flex items-center justify-between ${
+              systemNotice.type === 'error'
+                ? 'bg-rose-950/70 border-rose-800 text-rose-200'
+                : 'bg-cyan-950/70 border-cyan-800 text-cyan-200'
+            }`}
+          >
+            <span>{systemNotice.message}</span>
+            <button
+              onClick={() => setSystemNotice(null)}
+              className="text-slate-400 hover:text-white text-xs underline cursor-pointer ml-3"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
+
         {activeTab === 'dashboard' && (
           <Dashboard
             reports={reports}

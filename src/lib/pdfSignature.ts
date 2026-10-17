@@ -46,9 +46,9 @@ export interface SignatureVerificationResult {
   reason?: string;
 }
 
-const FORENSIC_ROOT_KEY_SECRET = 'VERISIGHT_FORENSIC_KEY_INFRASTRUCTURE_ECDSA_SHA256_2026_AUTHORITY_VAULT_NODE902';
-const SIGNER_AUTHORITY = 'VeriSight Certified Forensic Authority (FKI-Root-Node-902)';
-const SIGNER_KEY_ID = 'FKI-ECDSA-P256-SHA256#0x89F2A1';
+const FORENSIC_ROOT_KEY_SECRET = 'CHARS_DETECT_FORENSIC_KEY_INFRASTRUCTURE_ECDSA_SHA256_2026_AUTHORITY_VAULT_NODE902';
+const SIGNER_AUTHORITY = 'CHARS DETECT Certified Forensic Authority (CD-Root-Node-902)';
+const SIGNER_KEY_ID = 'CD-ECDSA-P256-SHA256#0x89F2A1';
 const CERTIFICATE_FINGERPRINT = 'SHA256: 7F:8A:3B:19:D4:C6:EE:90:3A:45:62:81:90:AF:CD:12:43:99:B7:6E:01:8A:DF:22:90:31:BC:48:9A:12:EF:08';
 
 /**
@@ -234,19 +234,19 @@ export function createSignedDocumentPackage(
 
   // Base64-armored forensic signature block
   const signatureBlock = [
-    '-----BEGIN VERISIGHT FORENSIC SIGNATURE BLOCK-----',
-    `Version: VeriSight-FKI-v2.4`,
+    '-----BEGIN CHARS DETECT FORENSIC SIGNATURE BLOCK-----',
+    `Version: CHARS-DETECT-v2.4`,
     `Algorithm: HMAC-SHA256-FIPS186`,
     `Key-ID: ${manifest.signerKeyId}`,
     `Timestamp: ${manifest.signedAt}`,
     `RFC3161-Token: ${manifest.rfc3161TimestampToken}`,
     `Payload-Digest: ${payloadSha256}`,
     `Signature: ${signatureHex}`,
-    '-----END VERISIGHT FORENSIC SIGNATURE BLOCK-----'
+    '-----END CHARS DETECT FORENSIC SIGNATURE BLOCK-----'
   ].join('\n');
 
   const verificationInstructions =
-    `To verify this forensic report independently: ` +
+    `To verify this CHARS DETECT forensic report independently: ` +
     `1) Serialize the manifest with deterministic key sorting. ` +
     `2) Compute the SHA-256 hash. ` +
     `3) Validate against Payload-Digest: ${payloadSha256}. ` +

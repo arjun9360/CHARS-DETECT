@@ -97,7 +97,7 @@ test('createSignedDocumentPackage generates valid signature block', () => {
   const pkg = createSignedDocumentPackage(mockReport, '2026-10-17T06:30:00.000Z');
   assert.ok(pkg.payloadSha256.length === 64);
   assert.ok(pkg.signatureHex.length === 64);
-  assert.ok(pkg.signatureBlock.includes('-----BEGIN VERISIGHT FORENSIC SIGNATURE BLOCK-----'));
+  assert.ok(pkg.signatureBlock.includes('-----BEGIN CHARS DETECT FORENSIC SIGNATURE BLOCK-----'));
   assert.ok(pkg.signatureBlock.includes(`Payload-Digest: ${pkg.payloadSha256}`));
   assert.ok(pkg.signatureBlock.includes(`Signature: ${pkg.signatureHex}`));
 
@@ -140,7 +140,7 @@ test('generateSignedForensicPdf builds multi-page PDF document buffer without er
   const { generateSignedForensicPdf } = await import('../lib/exportSignedPdf.ts');
   const result = generateSignedForensicPdf(mockReport, { autoDownload: false });
   assert.ok(result.doc);
-  assert.ok(result.filename.startsWith('Forensic_Dossier_rep_test_1001_SIGNED.pdf'));
+  assert.ok(result.filename.startsWith('CHARS_DETECT_Forensic_Dossier_rep_test_1001_SIGNED.pdf'));
   assert.equal(result.signedPackage.manifest.reportId, 'rep_test_1001');
 
   const pdfArrayBuffer = result.doc.output('arraybuffer');

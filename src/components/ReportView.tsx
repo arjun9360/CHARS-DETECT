@@ -156,7 +156,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(report, null, 2));
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', `verification_report_${report.id}.json`);
+    downloadAnchor.setAttribute('download', `CHARS_DETECT_Forensic_Report_${report.id}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
@@ -215,7 +215,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
             </span>
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight mt-1 flex items-center gap-2">
-            <span>Media Verification Dossier</span>
+            <span>CHARS DETECT Forensic Dossier</span>
           </h1>
         </div>
 
@@ -962,7 +962,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
             {/* Modal Action Footer */}
             <div className="flex items-center justify-between pt-3 border-t border-slate-800">
               <span className="text-[11px] font-mono text-slate-500">
-                FKI Root Authority v2.4
+                CHARS DETECT Root Authority v2.4
               </span>
 
               <div className="flex items-center gap-2">

@@ -149,6 +149,9 @@ test('cleanDisplayName strips all designation titles and parentheses', async () 
   const { cleanDisplayName } = await import('../types/client.ts');
   assert.equal(cleanDisplayName('Arjun R. (Principal Security Officer)'), 'Arjun R.');
   assert.equal(cleanDisplayName('Jane Doe (Senior Cyber Analyst)'), 'Jane Doe');
+  assert.equal(cleanDisplayName('Arjun R. - Lead Forensic Specialist'), 'Arjun R.');
+  assert.equal(cleanDisplayName('Sarah Connor, Senior Analyst'), 'Sarah Connor');
+  assert.equal(cleanDisplayName('Alex Morgan | Chief Investigator'), 'Alex Morgan');
   assert.equal(cleanDisplayName('Alex Morgan'), 'Alex Morgan');
   assert.equal(cleanDisplayName(''), '');
   assert.equal(cleanDisplayName(null), '');

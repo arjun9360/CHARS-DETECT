@@ -15,7 +15,8 @@ import {
   Shield,
   XCircle,
   FileText,
-  LogIn
+  LogIn,
+  Clock
 } from 'lucide-react';
 import { UserProfile, VerificationRecord, ConsentRecord, cleanDisplayName } from '../types/client.ts';
 import { User as FirebaseUser } from 'firebase/auth';
@@ -83,8 +84,11 @@ export const IdentityCenter: React.FC<IdentityCenterProps> = ({
 
   const activeEmail = firebaseUser?.email || user?.email || '';
   const isEmailVerified = Boolean(firebaseUser?.emailVerified || user?.emailVerified);
-  const activePhone = user?.phoneNumber || '+1 (555) 019-2834';
+  const activePhone = user?.phoneNumber || (firebaseUser ? 'No phone linked' : 'No phone linked (Guest)');
   const isPhoneVerified = Boolean(user?.phoneVerified);
+  const isIdentityVerified = Boolean(user?.identityVerified);
+  const isBiometricVerified = Boolean(user?.biometricVerified);
+  const hasBiometricConsent = Boolean(consents.some(c => c.purpose === 'biometric_verification' && c.consentStatus === 'granted'));
 
   return (
     <div className="space-y-8">
@@ -237,8 +241,17 @@ export const IdentityCenter: React.FC<IdentityCenterProps> = ({
               <div>
                 <span className="text-slate-500 block text-[11px]">VERIFICATION OUTCOME:</span>
                 <div className="flex items-center gap-1.5 mt-1">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-300 font-semibold">Government ID Verified (Sandbox)</span>
+                  {isIdentityVerified ? (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <span className="text-emerald-300 font-semibold">Government ID Verified (Sandbox)</span>
+                    </>
+                  ) : (
+                    <>
+                      <Clock className="w-4 h-4 text-slate-500" />
+                      <span className="text-slate-400 font-medium">Unverified (Action Required)</span>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -256,7 +269,7 @@ export const IdentityCenter: React.FC<IdentityCenterProps> = ({
             className="w-full py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-cyan-300 border border-slate-700 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
-            <span>Re-Verify Identity Session</span>
+            <span>{isIdentityVerified ? 'Re-Verify Identity Session' : 'Start Identity Verification Session'}</span>
           </button>
         </div>
 
@@ -268,8 +281,10 @@ export const IdentityCenter: React.FC<IdentityCenterProps> = ({
                 <Eye className="w-4 h-4 text-cyan-400" />
                 <h3 className="text-sm font-bold text-white">Tier 3: Biometric Liveness</h3>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800">
-                CONSENT REQUIRED
+              <span className={`text-[10px] font-mono px-2 py-0.5 rounded border ${
+                isBiometricVerified ? 'bg-emerald-950 text-emerald-400 border-emerald-800' : 'bg-cyan-950 text-cyan-400 border border-cyan-800'
+              }`}>
+                {isBiometricVerified ? 'VERIFIED' : 'CONSENT REQUIRED'}
               </span>
             </div>
 
@@ -277,8 +292,17 @@ export const IdentityCenter: React.FC<IdentityCenterProps> = ({
               <div>
                 <span className="text-slate-500 block text-[11px]">LIVENESS STATUS:</span>
                 <div className="flex items-center gap-1.5 mt-1">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-300 font-semibold">Passive & Active Liveness Passed</span>
+                  {isBiometricVerified ? (
+                    <>
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <span className="text-emerald-300 font-semibold">Passive & Active Liveness Passed</span>
+                    </>
+                  ) : (
+                    <>
+                      <Clock className="w-4 h-4 text-slate-500" />
+                      <span className="text-slate-400 font-medium">Pending Liveness Verification</span>
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -291,7 +315,9 @@ export const IdentityCenter: React.FC<IdentityCenterProps> = ({
 
               <div>
                 <span className="text-slate-500 block text-[11px]">PURPOSE SPECIFIC CONSENT:</span>
-                <span className="text-emerald-400 font-mono text-[11px]">GRANTED (Policy v2.4-2026)</span>
+                <span className={`font-mono text-[11px] ${hasBiometricConsent ? 'text-emerald-400' : 'text-slate-500'}`}>
+                  {hasBiometricConsent ? 'GRANTED (Policy v2.4-2026)' : 'NOT GRANTED'}
+                </span>
               </div>
             </div>
           </div>
